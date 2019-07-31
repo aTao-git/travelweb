@@ -29,7 +29,7 @@
             <el-dropdown>
               <span class="el-dropdown-link">
                 <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt="">
-                旺仔牛奶糖<i class="el-icon-arrow-down el-icon--right" />
+                {{ $store.state.user.userinfo.user.nickname }}<i class="el-icon-arrow-down el-icon--right" />
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>个人中心</el-dropdown-item>
@@ -45,7 +45,9 @@
 
 <script>
 export default {
-
+  mounted () {
+    console.log(this.$store.state.user.userinfo.user.nickname)
+  }
 }
 </script>
 
