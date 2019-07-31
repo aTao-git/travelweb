@@ -12,9 +12,10 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "element-ui": "^2.4.11",
     "@nuxtjs/axios": "^5.3.6",
-    "nuxt": "^2.0.0"
+    "element-ui": "^2.4.11",
+    "nuxt": "^2.0.0",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",

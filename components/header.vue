@@ -20,10 +20,8 @@
           </nuxt-link>
         </div>
         <div class="login">
-          <div v-if="false" class="beforelogin">
-            <nuxt-link to="/user/login">
-              登陆 / 注册
-            </nuxt-link>
+          <div v-if="!$store.state.user.userinfo.token" class="beforelogin">
+            <span @click="sendstate">登陆 / 注册</span>
           </div>
           <div v-else class="islogin">
             <el-dropdown>
@@ -33,7 +31,9 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>个人中心</el-dropdown-item>
-                <el-dropdown-item>退出</el-dropdown-item>
+                <el-dropdown-item @click.native="clearstore">
+                  退出
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -47,6 +47,15 @@
 export default {
   mounted () {
     console.log(this.$store.state.user.userinfo.user.nickname)
+  },
+  methods: {
+    clearstore () {
+      this.$store.commit('user/clearuserinfo')
+    },
+    sendstate () {
+      console.log(this.$store.state.user.states)
+      this.$store.commit('user/setstates', false)
+    }
   }
 }
 </script>
@@ -84,7 +93,7 @@ $bluecolor = #409eff
           border-bottom 5px solid $bluecolor
           color $bluecolor
     .login
-      a
+      span
         &:hover
           color $bluecolor
       .islogin
