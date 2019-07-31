@@ -68,6 +68,10 @@ export default {
             .then((res) => {
               this.$store.commit('user/setuserinfo', res.data)
               this.$store.commit('user/setstates', true)
+              this.$message({
+                type: 'success',
+                message: '登录成功'
+              })
             })
             .catch((err) => {
               console.log(err)

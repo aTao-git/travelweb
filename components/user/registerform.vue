@@ -94,9 +94,8 @@ export default {
         method: 'POST',
         data: { tel: this.form.username }
       }).then((res) => {
-        this.$message({
-          type: 'success',
-          message: '您的验证码是' + res.data.code
+        this.$alert(`手机验证码为${res.data.code}`, {
+          type: 'warning'
         })
       }).catch((err) => {
         console.log(err)
@@ -113,6 +112,10 @@ export default {
           }).then((res) => {
             this.$store.commit('user/setuserinfo', res.data)
             this.$store.commit('user/setstates', true)
+            this.$message({
+              type: 'success',
+              message: '注册成功,已自动登录'
+            })
           }).catch((err) => {
             console.log(err)
           })

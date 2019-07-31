@@ -23,10 +23,10 @@
 
     <!-- 搜索框，真好看 -->
     <div class="banner-content">
-      <transition name="move" enter-active-class="animated bounceInRight">
+      <transition name="move" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutLeft">
         <Search v-if="$store.state.user.states" />
       </transition>
-      <transition name="move2" enter-active-class="animated bounceInRight">
+      <transition name="move2" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutLeft">
         <Login v-if="!$store.state.user.states" />
       </transition>
     </div>
