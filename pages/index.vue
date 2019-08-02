@@ -60,6 +60,9 @@ export default {
       const { data } = res.data
       this.banners = data
     })
+    if (!this.$store.state.user.userinfo.token) {
+      this.$store.commit('user/setstates', true)
+    }
   }
 }
 </script>

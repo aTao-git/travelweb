@@ -46,14 +46,13 @@
 <script>
 export default {
   mounted () {
-    console.log(this.$store.state.user.userinfo.user.nickname)
+    // console.log(this.$store.state.user.userinfo.user.nickname)
   },
   methods: {
     clearstore () {
       this.$store.commit('user/clearuserinfo')
     },
     sendstate () {
-      console.log(this.$store.state.user.states)
       this.$store.commit('user/setstates', false)
     }
   }
