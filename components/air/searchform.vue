@@ -160,6 +160,27 @@ export default {
 
     // 提交表单是触发
     handleSubmit () {
+      if (!this.form.departCity) {
+        this.$message({
+          type: 'warning',
+          message: '必须输入出发城市!'
+        })
+        return
+      }
+      if (!this.form.destCity) {
+        this.$message({
+          type: 'warning',
+          message: '必须输入到达城市!'
+        })
+        return
+      }
+      if (!this.form.departDate) {
+        this.$message({
+          type: 'warning',
+          message: '请选择出发时间!'
+        })
+        return
+      }
       this.$router.push({
         path: '/air/flights',
         query: this.form
