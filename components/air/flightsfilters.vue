@@ -100,20 +100,13 @@ export default {
       const arr = this.data.flights.filter((item) => {
         let pass = true
         Object.keys(this.filters).forEach((item2) => {
-          console.log(this)
           if (!this.filters[item2].value) {
             return
           }
           if (Array.isArray(this.filters[item2].value)) {
-            console.log(this.filters[item2].value)
             const [from, to] = this.filters[item2].value
-            console.log(from)
-            console.log(to)
             const start = item[this.filters[item2].key].split(':')[0]
-            console.log(start)
-            console.log(from > start)
-            console.log(to < start)
-            if (from < start && to > start) {
+            if (+start < +from || +start >= +to) {
               pass = false
             }
           } else if (item[this.filters[item2].key] !== this.filters[item2].value) {
@@ -148,9 +141,11 @@ export default {
       this.$emit('returnflights', arr)
       // if (value) {
       //   const [from, to] = value.split(',')
+      //   console.log(typeof from)
       //   const arr = this.data.flights.filter((item) => {
       //     const start = item.dep_time.split(':')[0]
-      //     return start >= from && start < to
+      //     console.log(to)
+      //     return +start >= +from && +start < +to
       //   })
       //   this.$emit('returnflights', arr)
       // }
