@@ -132,12 +132,8 @@ export default {
 
     // 选择出发时间时候触发
     handleFlightTimes (value) {
-      console.log(value)
-      console.log(value.split(','))
       this.filters.time.value = value.split(',')
-      console.log(this.filters.time.value)
       const arr = this.handleChange()
-      console.log(arr)
       this.$emit('returnflights', arr)
       // if (value) {
       //   const [from, to] = value.split(',')
@@ -183,6 +179,12 @@ export default {
       this.flightTimes = '' // 出发时间
       this.company = '' // 航空公司
       this.airSize = '' // 机型大小
+      this.filters = {
+        company: { value: '', key: 'airline_name' },
+        airport: { value: '', key: 'org_airport_name' },
+        airsize: { value: '', key: 'plane_size' },
+        time: { value: '', key: 'dep_time' }
+      }
       this.$emit('returnflights', this.data.flights)
     }
   }
