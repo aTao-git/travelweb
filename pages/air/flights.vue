@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div />
+        <FlightsFileters :data="flightsdata" @returnflights="returnflights" />
 
         <!-- 航班头部布局 -->
         <FlightsLisrHead />
@@ -32,13 +32,19 @@
 <script>
 import FlightsLisrHead from '@/components/air/flightsLisrHead'
 import FlightsItem from '@/components/air/flightsItem.vue'
+import FlightsFileters from '@/components/air/flightsfilters'
 export default {
   components: {
     FlightsLisrHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFileters
   },
   data () {
     return {
+      flightsdata: {
+        info: {},
+        options: {}
+      },
       flightslist: [],
       pagenum: 1,
       pagesize: 5,
@@ -51,6 +57,8 @@ export default {
       params: this.$route.query
     }).then((res) => {
       this.flightslist = res.data.flights
+      this.flightsdata = { ...res.data }
+      console.log(this.flightslist)
       this.total = this.flightslist.length
     }).catch((err) => {
       console.log(err)
@@ -62,6 +70,10 @@ export default {
     },
     handleCurrentChange (value) {
       this.pagenum = value
+    },
+    returnflights (arr) {
+      this.flightslist = arr
+      this.total = arr.length
     }
   }
 }
