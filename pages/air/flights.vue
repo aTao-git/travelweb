@@ -24,6 +24,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside />
       </div>
     </el-row>
   </section>
@@ -33,11 +34,13 @@
 import FlightsLisrHead from '@/components/air/flightsLisrHead'
 import FlightsItem from '@/components/air/flightsItem.vue'
 import FlightsFileters from '@/components/air/flightsfilters'
+import FlightsAside from '@/components/air/flightsaside'
 export default {
   components: {
     FlightsLisrHead,
     FlightsItem,
-    FlightsFileters
+    FlightsFileters,
+    FlightsAside
   },
   data () {
     return {
@@ -51,20 +54,34 @@ export default {
       total: 0
     }
   },
+  watch: {
+    $route () {
+      this.getData()
+    }
+  },
   mounted () {
-    this.$axios({
-      url: '/airs',
-      params: this.$route.query
-    }).then((res) => {
-      this.flightslist = res.data.flights
-      this.flightsdata = { ...res.data }
-      console.log(this.flightslist)
-      this.total = this.flightslist.length
-    }).catch((err) => {
-      console.log(err)
-    })
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$axios({
+        url: '/airs',
+        params: this.$route.query
+      }).then((res) => {
+        this.flightslist = res.data.flights
+        this.flightsdata = { ...res.data }
+        console.log(this.flightslist)
+        this.total = this.flightslist.length
+        if (!this.total) {
+          this.$message({
+            type: 'warning',
+            message: '没有查找到数据!'
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     handleSizeChange (value) {
       this.pagesize = value
     },
@@ -74,6 +91,12 @@ export default {
     returnflights (arr) {
       this.flightslist = arr
       this.total = arr.length
+      if (!this.total) {
+        this.$message({
+          type: 'warning',
+          message: '没有查找到数据!'
+        })
+      }
     }
   }
 }

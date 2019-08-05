@@ -185,6 +185,7 @@ export default {
         path: '/air/flights',
         query: this.form
       })
+      this.$store.commit('air/setHistory', this.form)
     }
   }
 }
