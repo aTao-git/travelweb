@@ -1,6 +1,6 @@
 <template>
   <div class="flight-item">
-    <div @click="wasshow = !wasshow">
+    <div @click="isshow = !isshow">
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
@@ -26,7 +26,7 @@
         </el-col>
       </el-row>
     </div>
-    <div v-show="wasshow" :class="{ 'flight-recommend':true,'animated':true,'zoomIn':wasshow }">
+    <div v-show="isshow" :class="{ 'flight-recommend':true,'animated':true,'zoomIn':isshow }">
       <!-- 隐藏的座位信息列表 -->
       <el-row v-for="(item,index) in data.seat_infos" :key="index" type="flex" justify="space-between" align="middle">
         <el-col :span="4">
@@ -57,28 +57,19 @@
 </template>
 
 <script>
-import myemit from '@/plugins/event.js'
 export default {
   props: {
     data: {
       type: Object,
       default () {
-        return {
-          wasshow: false
-        }
+        return {}
       }
     }
-    // wasshow: {
-    //   type: Boolean,
-    //   default () {
-    //     return false
-    //   }
-    // }
   },
   data () {
     return {
       flitghttime: '',
-      wasshow: false
+      isshow: false
     }
   },
   computed: {
@@ -95,16 +86,6 @@ export default {
       const min = time % 60
       return `${hour}时${min}分`
     }
-  },
-  updated () {
-    myemit.$on('sendshow', (data) => {
-      this.wasshow = data
-    })
-  },
-  mounted () {
-    myemit.$on('sendshow', (data) => {
-      this.wasshow = data
-    })
   }
 }
 </script>

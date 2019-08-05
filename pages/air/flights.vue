@@ -10,7 +10,7 @@
         <FlightsLisrHead />
 
         <!-- 航班信息 -->
-        <FlightsItem v-for="(item,index) in flightsshow" :key="index" :data="item" :wasshow="wasshow" />
+        <FlightsItem v-for="(item,index) in flightslist" v-show="(pagenum - 1) * pagesize <= index && pagenum * pagesize > index" :key="index" :data="item" />
         <el-pagination
           :current-page="pagenum"
           :page-sizes="[5, 8, 10, 13]"
@@ -32,7 +32,6 @@
 <script>
 import FlightsLisrHead from '@/components/air/flightsLisrHead'
 import FlightsItem from '@/components/air/flightsItem.vue'
-import myemit from '@/plugins/event.js'
 export default {
   components: {
     FlightsLisrHead,
@@ -41,11 +40,9 @@ export default {
   data () {
     return {
       flightslist: [],
-      flightsshow: [],
       pagenum: 1,
       pagesize: 5,
-      total: 0,
-      wasshow: false
+      total: 0
     }
   },
   mounted () {
@@ -54,11 +51,7 @@ export default {
       params: this.$route.query
     }).then((res) => {
       this.flightslist = res.data.flights
-      this.flightslist.map((item) => {
-        item.show = false
-      })
       this.total = this.flightslist.length
-      this.flightsshow = this.flightslist.slice(0, this.pagesize)
     }).catch((err) => {
       console.log(err)
     })
@@ -66,19 +59,9 @@ export default {
   methods: {
     handleSizeChange (value) {
       this.pagesize = value
-      this.changepage()
     },
     handleCurrentChange (value) {
-      myemit.$emit('sendshow', false)
       this.pagenum = value
-      this.changepage()
-    },
-    changepage () {
-      this.flightsshow = this.flightslist.slice((this.pagenum - 1) * this.pagesize, ((this.pagenum - 1) * this.pagesize + this.pagesize))
-      this.flightsshow.forEach((item) => {
-        item.show = false
-      })
-      console.log(this.flightsshow)
     }
   }
 }
