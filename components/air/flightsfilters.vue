@@ -86,50 +86,100 @@ export default {
         { label: '大', value: 'L' },
         { label: '中', value: 'M' },
         { label: '小', value: 'S' }
-      ]
+      ],
+      filters: {
+        company: { value: '', key: 'airline_name' },
+        airport: { value: '', key: 'org_airport_name' },
+        airsize: { value: '', key: 'plane_size' },
+        time: { value: '', key: 'dep_time' }
+      }
     }
   },
   methods: {
+    handleChange () {
+      const arr = this.data.flights.filter((item) => {
+        let pass = true
+        Object.keys(this.filters).forEach((item2) => {
+          console.log(this)
+          if (!this.filters[item2].value) {
+            return
+          }
+          if (Array.isArray(this.filters[item2].value)) {
+            console.log(this.filters[item2].value)
+            const [from, to] = this.filters[item2].value
+            console.log(from)
+            console.log(to)
+            const start = item[this.filters[item2].key].split(':')[0]
+            console.log(start)
+            console.log(from > start)
+            console.log(to < start)
+            if (from < start && to > start) {
+              pass = false
+            }
+          } else if (item[this.filters[item2].key] !== this.filters[item2].value) {
+            pass = false
+          }
+        })
+        return pass
+      })
+      return arr
+    },
     // 选择机场时候触发
     handleAirport (value) {
-      if (value) {
-        const arr = this.data.flights.filter((item) => {
-          return item.org_airport_name === value
-        })
-        this.$emit('returnflights', arr)
-      }
+      this.filters.airport.value = value
+      const arr = this.handleChange()
+      this.$emit('returnflights', arr)
+      // if (value) {
+      //   const arr = this.data.flights.filter((item) => {
+      //     return item.org_airport_name === value
+      //   })
+      //   this.$emit('returnflights', arr)
+      // }
     },
 
     // 选择出发时间时候触发
     handleFlightTimes (value) {
-      if (value) {
-        const [from, to] = value.split(',')
-        const arr = this.data.flights.filter((item) => {
-          const start = item.dep_time.split(':')[0]
-          return start >= from && start < to
-        })
-        this.$emit('returnflights', arr)
-      }
+      console.log(value)
+      console.log(value.split(','))
+      this.filters.time.value = value.split(',')
+      console.log(this.filters.time.value)
+      const arr = this.handleChange()
+      console.log(arr)
+      this.$emit('returnflights', arr)
+      // if (value) {
+      //   const [from, to] = value.split(',')
+      //   const arr = this.data.flights.filter((item) => {
+      //     const start = item.dep_time.split(':')[0]
+      //     return start >= from && start < to
+      //   })
+      //   this.$emit('returnflights', arr)
+      // }
     },
 
     // 选择航空公司时候触发
     handleCompany (value) {
-      if (value) {
-        const arr = this.data.flights.filter((item) => {
-          return item.airline_name === value
-        })
-        this.$emit('returnflights', arr)
-      }
+      this.filters.company.value = value
+      const arr = this.handleChange()
+      this.$emit('returnflights', arr)
+      // if (value) {
+      //   const arr = this.data.flights.filter((item) => {
+      //     return item.airline_name === value
+      //   })
+      //   this.$emit('returnflights', arr)
+      // }
     },
 
     // 选择机型时候触发
     handleAirSize (value) {
-      if (value) {
-        const arr = this.data.flights.filter((item) => {
-          return item.plane_size === value
-        })
-        this.$emit('returnflights', arr)
-      }
+      this.filters.airsize.value = value
+      const arr = this.handleChange()
+      this.$emit('returnflights', arr)
+      // if (value) {
+      //   const arr = this.data.flights.filter((item) => {
+      //     return item.plane_size === value
+      //   })
+      //   this.$emit('returnflights', arr)
+      // }
     },
 
     // 撤销条件时候触发
