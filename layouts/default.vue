@@ -1,6 +1,9 @@
 <template>
   <div>
     <Header />
+    <transition enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
+      <Login v-if="$store.state.user.states" />
+    </transition>
     <nuxt />
     <Footer />
   </div>
@@ -8,10 +11,12 @@
 <script>
 import Header from '@/components/header'
 import Footer from '@/components/footer'
+import Login from '@/components/user/login'
 export default {
   components: {
     Header,
-    Footer
+    Footer,
+    Login
   }
 }
 </script>
@@ -20,6 +25,9 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+html,body {
+  height: 100%;
 }
 ul,ol,li {
   list-style: none;

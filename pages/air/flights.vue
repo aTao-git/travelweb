@@ -70,7 +70,6 @@ export default {
       }).then((res) => {
         this.flightslist = res.data.flights
         this.flightsdata = { ...res.data }
-        console.log(this.flightslist)
         this.total = this.flightslist.length
         if (!this.total) {
           this.$message({

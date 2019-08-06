@@ -16,6 +16,7 @@
     "element-ui": "^2.4.11",
     "moment": "^2.24.0",
     "nuxt": "^2.0.0",
+    "qrcode": "^1.4.1",
     "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {

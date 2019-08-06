@@ -34,6 +34,14 @@
       >
         登录
       </el-button>
+      <el-button
+        style="margin-left: 0px"
+        class="submit"
+        type="warning"
+        @click="closeLogin"
+      >
+        取消
+      </el-button>
     </el-form>
   </div>
 </template>
@@ -67,7 +75,7 @@ export default {
           })
             .then((res) => {
               this.$store.commit('user/setuserinfo', res.data)
-              this.$store.commit('user/setstates', true)
+              this.$store.commit('user/setstates', false)
               this.$message({
                 type: 'success',
                 message: '登录成功'
@@ -78,6 +86,9 @@ export default {
             })
         }
       })
+    },
+    closeLogin () {
+      this.$store.commit('user/setstates', false)
     }
   }
 }

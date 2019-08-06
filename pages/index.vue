@@ -23,12 +23,7 @@
 
     <!-- 搜索框，真好看 -->
     <div class="banner-content">
-      <transition name="move" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutLeft">
-        <Search v-if="$store.state.user.states" />
-      </transition>
-      <transition name="move2" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutLeft">
-        <Login v-if="!$store.state.user.states" />
-      </transition>
+      <Search />
     </div>
   </div>
 </template>
@@ -39,11 +34,9 @@
 // import axios from "axios";
 // Vue.prototype.$axios = axios;
 import Search from '@/components/user/searchbar'
-import Login from '@/components/user/login'
 export default {
   components: {
-    Search,
-    Login
+    Search
   },
   data () {
     return {
@@ -60,9 +53,6 @@ export default {
       const { data } = res.data
       this.banners = data
     })
-    if (!this.$store.state.user.userinfo.token) {
-      this.$store.commit('user/setstates', true)
-    }
   }
 }
 </script>

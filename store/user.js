@@ -1,6 +1,6 @@
 export const state = () => {
   return {
-    states: true,
+    states: false,
     userinfo: {
       token: '',
       user: {

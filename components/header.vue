@@ -51,9 +51,10 @@ export default {
   methods: {
     clearstore () {
       this.$store.commit('user/clearuserinfo')
+      this.$store.commit('user/setstates', false)
     },
     sendstate () {
-      this.$store.commit('user/setstates', false)
+      this.$store.commit('user/setstates', true)
     }
   }
 }

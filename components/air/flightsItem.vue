@@ -26,33 +26,36 @@
         </el-col>
       </el-row>
     </div>
-    <div v-show="isshow" :class="{ 'flight-recommend':true,'animated':true,'zoomIn':isshow }">
-      <!-- 隐藏的座位信息列表 -->
-      <el-row v-for="(item,index) in data.seat_infos" :key="index" type="flex" justify="space-between" align="middle">
-        <el-col :span="4">
-          低价推荐
-        </el-col>
-        <el-col :span="20">
-          <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
-            <el-col :span="16" class="flight-sell-left">
-              <span>{{ item.group_name }}</span> | {{ item.supplierName }}
-            </el-col>
-            <el-col :span="5" class="price">
-              ￥{{ item.org_settle_price }}
-            </el-col>
-            <el-col :span="3" class="choose-button">
-              <el-button
-                type="warning"
-                size="mini"
-              >
-                选定
-              </el-button>
-              <p>剩余：{{ item.discount }}</p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </div>
+    <transition enter-active-class="animated zoomIn" leave-active-class="animated bounceOutLeft">
+      <div v-show="isshow" :class="{ 'flight-recommend':true }">
+        <!-- 隐藏的座位信息列表 -->
+        <el-row v-for="(item,index) in data.seat_infos" :key="index" type="flex" justify="space-between" align="middle">
+          <el-col :span="4">
+            低价推荐
+          </el-col>
+          <el-col :span="20">
+            <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
+              <el-col :span="16" class="flight-sell-left">
+                <span>{{ item.group_name }}</span> | {{ item.supplierName }}
+              </el-col>
+              <el-col :span="5" class="price">
+                ￥{{ item.org_settle_price }}
+              </el-col>
+              <el-col :span="3" class="choose-button">
+                <el-button
+                  type="warning"
+                  size="mini"
+                  @click="handlelinkto(data.id, item.seat_xid)"
+                >
+                  选定
+                </el-button>
+                <p>剩余：{{ item.discount }}</p>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -85,6 +88,17 @@ export default {
       const hour = Math.floor(time / 60)
       const min = time % 60
       return `${hour}时${min}分`
+    }
+  },
+  methods: {
+    handlelinkto (id, seatXid) {
+      this.$router.push({
+        path: '/air/order',
+        query: {
+          id,
+          seat_xid: seatXid
+        }
+      })
     }
   }
 }
