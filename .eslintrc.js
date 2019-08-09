@@ -3,6 +3,9 @@ module.exports = {
   env: {
     browser: true,
     node: true
+  //   globals: {
+  //     "AMap": true
+  // }
   },
   parserOptions: {
     parser: 'babel-eslint'
