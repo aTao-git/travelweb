@@ -69,3 +69,6 @@
   background:#409eff;
   height: 1px;
 }
+.el-message-box__wrapper {
+  z-index: 50000 !important;
+}

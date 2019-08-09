@@ -44,7 +44,7 @@ export default {
   position fixed
   width 100%
   height 100%
-  z-index 999
+  z-index 99999
   margin-top -62px
   background rgba(0,0,0,.3)
   .form-wrapper{

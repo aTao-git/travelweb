@@ -63,6 +63,7 @@ export default {
   */
   build: {
     transpile: [/^element-ui/],
+    vendor: ['external_library'],
     /*
     ** You can extend webpack config here
     */
