@@ -13,7 +13,7 @@
           />
         </div>
         <div class="editor">
-          <wangEditor @sendeditorcontent="sendeditorcontent" />
+          <wangEditor :wangeditorcontent="article.content" @sendeditorcontent="sendeditorcontent" />
         </div>
         <div class="chosecity">
           <h3>选择城市</h3>
@@ -28,10 +28,15 @@
           发布
         </el-button>
         <i style="font-style: normal">或者</i>
-        <span>保存到草稿</span>
+        <span @click="savetodraft">保存到草稿</span>
       </el-col>
       <el-col :span="6">
-        <Draft />
+        <Draft
+          v-for="(item, index) in $store.state.post.article"
+          :key="index"
+          :draftdata="item"
+          @showDraftData="showDraftData"
+        />
       </el-col>
     </el-row>
   </div>
@@ -115,12 +120,43 @@ export default {
       this.$axios({
         url: 'http://157.122.54.189:9095/posts',
         method: 'POST',
-        data: this.article
+        data: this.article,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userinfo.token} `
+        }
       }).then((res) => {
         console.log(res)
       }).catch((err) => {
         console.log(err)
       })
+    },
+    savetodraft () {
+      let pass = true
+      if (!this.article.title) {
+        pass = false
+      }
+      if (!this.article.content) {
+        pass = false
+      }
+      if (!pass) {
+        this.$message({
+          type: 'error',
+          message: '必须输入标题和内容才可以保存到草稿！'
+        })
+        return
+      }
+      if (this.$store.state.post.article.length === 5) {
+        this.$message({
+          type: 'warning',
+          message: '草稿箱最多保存5条数据，请先删除一些再来~'
+        })
+        return
+      }
+      this.$store.commit('post/addDraft', { ...this.article })
+    },
+    showDraftData (data) {
+      this.article = { ...data }
+      console.log(this.article)
     }
   }
 }

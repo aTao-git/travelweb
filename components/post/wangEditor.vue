@@ -6,12 +6,11 @@
 <script>
 export default {
   name: 'Editor',
-  // catchData是一个类似回调函数，来自父组件，当然也可以自己写一个函数，主要是用来获取富文本编辑器中的html内容用来传递给服务端
   props: {
-    catch: {
-      type: Array,
+    wangeditorcontent: {
+      type: String,
       default () {
-        return []
+        return ''
       }
     }
   },
@@ -21,6 +20,12 @@ export default {
       editorContent: ''
     }
   }, // 接收父组件的方法
+  watch: {
+    wangeditorcontent (newString, oldString) {
+      this.editorContent = newString
+      this.editor.txt.html(this.editorContent)
+    }
+  },
   mounted () {
     if (process.browser) {
       const E = require('wangeditor')
@@ -32,7 +37,6 @@ export default {
       this.editor.customConfig.onchange = (html) => {
         this.editorContent = html
         this.$emit('sendeditorcontent', this.editorContent)
-        console.log(this.editorContent)
       }
 
       this.editor.customConfig.uploadImgHooks = {

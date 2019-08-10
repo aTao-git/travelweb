@@ -88,6 +88,10 @@ export default {
       })
     },
     closeLogin () {
+      this.$message({
+        type: 'warning',
+        message: '已取消登录！'
+      })
       this.$store.commit('user/setstates', false)
     }
   }
