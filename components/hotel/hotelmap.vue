@@ -3,8 +3,6 @@
     <div id="container" />
   </div>
 </template>
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=078e5bb6a791fbd84b633173d462ad32&callback=onLoad">
-</script>
 <script>
 export default {
   props: {

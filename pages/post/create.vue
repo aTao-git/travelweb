@@ -117,15 +117,20 @@ export default {
         })
         return
       }
+      const { id, ...data } = this.article
       this.$axios({
         url: 'http://157.122.54.189:9095/posts',
         method: 'POST',
-        data: this.article,
+        data,
         headers: {
           Authorization: `Bearer ${this.$store.state.user.userinfo.token} `
         }
       }).then((res) => {
-        console.log(res)
+        if (res.status === 200) {
+          this.$router.push({
+            path: '/post'
+          })
+        }
       }).catch((err) => {
         console.log(err)
       })

@@ -43,7 +43,7 @@ export default {
         customInsert (insertImg, result, editor) {
           // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
           // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
-          console.log(result)
+          // console.log(result)
           // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
           let url = result[0].url
           url = 'http://157.122.54.189:9095' + url
