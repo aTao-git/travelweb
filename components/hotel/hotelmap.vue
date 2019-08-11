@@ -27,9 +27,11 @@ export default {
       let centerlongitude = 0
       let mark = []
       setTimeout(() => {
-        centerlatitude = this.data[0].latitude
-        centerlongitude = this.data[0].longitude
-        mark = this.data
+        if (this.data[0]) {
+          centerlatitude = this.data[0].latitude
+          centerlongitude = this.data[0].longitude
+          mark = this.data
+        }
       }, 300)
       window.onLoad = function () {
         const map = new AMap.Map('container', {

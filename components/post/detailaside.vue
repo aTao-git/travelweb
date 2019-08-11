@@ -5,7 +5,7 @@
     </div>
     <div v-for="(item,index) in asideshow" :key="index" class="article">
       <img :src="item.images[0]" alt="">
-      <div class="info">
+      <div class="info" style="height: 80px">
         <h4>{{ item.title }}</h4>
         <p>{{ item.updated_at }} 阅读 {{ item.watch }}</p>
       </div>
@@ -40,12 +40,13 @@ export default {
     padding 24px 0
     img
       width 100px
+      min-width 100px
+      min-height 80px
       height 80px
       margin-right 10px
     h4
       font-weight normal
     p
-      margin-top 42px
       font-size 12px
       color #cccccc
 </style>

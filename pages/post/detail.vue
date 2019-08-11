@@ -44,14 +44,17 @@
             评论
           </h4>
           <el-tag
+            v-if="reply.nickname"
             closable
             type="info"
             class="replyTag"
+            @close="handleCloseReply"
           >
             回复@
           </el-tag>
           <div ref="cmtInput" class="cmt-input">
             <el-input
+              v-model="cmtForm.content"
               type="textarea"
               resize="none"
               placeholder="说点什么吧..."
@@ -70,7 +73,7 @@
                 <i class="el-icon-plus" />
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" src="" alt="">
+                <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
             </div>
             <div>
@@ -78,6 +81,7 @@
                 type="primary"
                 size="mini"
                 class="cmt-submit"
+                @click="submitCmtForm"
               >
                 提交
               </el-button>
@@ -86,6 +90,59 @@
           <div v-if="false" class="cmt-empty">
             暂无评论，赶紧抢占沙发！
           </div>
+          <div class="cmt-list">
+            <div
+              v-for="(item, index) in comments"
+              :key="index"
+              class="cmt-item"
+            >
+              <div class="cmt-info">
+                <img :src="'http://157.122.54.189:9095' + item.account.defaultAvatar" alt="">
+                {{ item.account.nickname }}
+                <i>{{ item.created_at | timestamp }}</i>
+                <span>{{ item.level }}</span>
+              </div>
+              <div class="cmt-content">
+                <!-- 评论楼层 -->
+                <CommentFloor
+                  v-if="item.parent"
+                  :comment="item.parent"
+                  @preview="handlePictureCardPreview"
+                  @reply="handleReply"
+                />
+
+                <div class="cmt-new">
+                  <p class="cmt-message">
+                    {{ item.content }}
+                  </p>
+                  <el-row type="flex">
+                    <div v-for="(pic, picIndex) in item.pics" :key="picIndex" class="cmt-pic">
+                      <img :src="'http://157.122.54.189:9095' + pic.url" @click="handlePictureCardPreview(pic)">
+                    </div>
+                  </el-row>
+                  <div class="cmt-ctrl">
+                    <a href="javascript:;" @click="handleReply(item)">回复</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <el-row
+            v-if="commentsTotal"
+            type="flex"
+            justify="center"
+            style="margin-top:10px;"
+          >
+            <el-pagination
+              :current-page="Math.floor(start / limit) + 1"
+              :page-sizes="[5, 10, 15, 20]"
+              :page-size="limit"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="commentsTotal"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </el-row>
         </div>
       </el-col>
       <el-col :offset="1" :span="6">
@@ -98,9 +155,16 @@
 <script>
 import Moment from 'moment'
 import DetailAside from '@/components/post/detailaside'
+import CommentFloor from '@/components/post/commentFloor'
 export default {
   components: {
-    DetailAside
+    DetailAside,
+    CommentFloor
+  },
+  filters: {
+    timestamp (value) {
+      return Moment(value).format('YYYY-MM-DD h:mm')
+    }
   },
   data () {
     return {
@@ -108,8 +172,25 @@ export default {
         tilte: '',
         content: ''
       },
+      dialogImageUrl: '',
       asideshow: [],
-      dialogVisible: false
+      dialogVisible: false,
+      detail: {},
+      comments: [],
+      commentsTotal: 0,
+      start: 0,
+      limit: 5,
+      cmtForm: {
+        content: '',
+        pics: []
+      },
+      reply: {},
+      recommends: {}
+    }
+  },
+  watch: {
+    $route () {
+      window.location.reload()
     }
   },
   mounted () {
@@ -140,19 +221,92 @@ export default {
     }).catch((err) => {
       console.log(err)
     })
+    this.getComments(id)
   },
   methods: {
     handleSuccess (res, file, fileList) {
-      console.log(res)
-      console.log(file)
-      console.log(fileList)
+      file.response[0].url = 'http://157.122.54.189:9095' + file.response[0].url
+      this.cmtForm.pics.push(file.response[0])
+      console.log(this.cmtForm)
     },
     handleRemove (file, fileList) {
-      console.log(file)
-      console.log(fileList)
+      const picsarr = []
+      fileList.forEach((item) => {
+        item.response[0].url = 'http://157.122.54.189:9095' + item.response[0].url
+        picsarr.push(item.response[0])
+      })
+      this.cmtForm.pics = picsarr
     },
     handlePictureCardPreview (file) {
-      console.log(file)
+      if (file.response) {
+        file = file.response[0]
+      }
+      this.dialogImageUrl = 'http://157.122.54.189:9095' + file.url
+      this.dialogVisible = true
+    },
+    submitCmtForm () {
+      const { user: { userinfo } } = this.$store.state
+      this.cmtForm = {
+        ...this.cmtForm,
+        post: this.$route.query.id
+      }
+      console.log(this.cmtForm)
+      this.$axios({
+        url: 'http://157.122.54.189:9095/comments',
+        method: 'POST',
+        data: this.cmtForm,
+        headers: {
+          Authorization: `Bearer ${userinfo.token}`
+        }
+      }).then((res) => {
+        const { message, status } = res.data
+        if (status === 0) {
+          this.$message({
+            type: 'success',
+            message
+          })
+        }
+        this.cmtForm = {
+          content: '',
+          pics: []
+        }
+        this.getComments()
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    getComments () {
+      this.$axios({
+        url: 'http://157.122.54.189:9095/posts/comments',
+        params: {
+          post: this.$route.query.id,
+          _start: this.start,
+          _limit: this.limit
+        }
+      }).then((res) => {
+        const { data, total } = res.data
+        this.comments = data
+        this.commentsTotal = total
+      })
+    },
+    handleSizeChange (value) {
+      this.limit = value
+      this.start = 0
+      this.getComments()
+    },
+
+    handleCurrentChange (value) {
+      this.start = this.limit * value - 2
+      this.getComments()
+    },
+    handleReply (comment) {
+      this.reply = comment.account
+      this.cmtForm.follow = comment.id
+      window.scrollTo(0, this.$refs.cmtInput.offsetTop)
+    },
+    handleCloseReply () {
+      this.reply = {}
+      this.cmtForm.follow = ''
     }
   }
 }
@@ -261,4 +415,18 @@ export default {
         height 100%
         object-fit cover
         cursor pointer
+    .cmt-new:hover
+      .cmt-ctrl
+        *
+          display inline
+    .cmt-ctrl
+      height 20px
+      line-height 20px
+      font-size 12px
+      color #1e502a
+      text-align right
+      *
+        display none
+      a:hover
+        text-decoration underline
 </style>
